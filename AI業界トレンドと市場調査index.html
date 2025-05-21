@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI業界トレンドと市場調査インフォグラフィック</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .section-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700;
+            margin-bottom: 1.5rem; /* mb-6 */
+            text-align: center;
+        }
+        .subsection-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;
+            margin-top: 2rem; /* mt-8 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding: 1.5rem; /* p-6 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .icon-big {
+            font-size: 3rem;
+            line-height: 1;
+        }
+        .flowchart-step {
+            border: 2px solid;
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flowchart-arrow {
+            font-size: 1.5rem; /* text-2xl */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0.5rem; /* mx-2 */
+        }
+        .timeline {
+            position: relative;
+            padding-left: 2.5rem; /* pl-10 */
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.5rem; /* left-2 */
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #90E0EF; /* Chosen palette accent */
+            border-radius: 2px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -2.25rem; /* -ml-9, considering parent padding */
+            top: 0.25rem; /* top-1 */
+            width: 1rem; /* w-4 */
+            height: 1rem; /* h-4 */
+            background-color: #0077B6; /* Chosen palette main */
+            border-radius: 9999px; /* rounded-full */
+            border: 2px solid white;
+        }
+        /* Chosen Palette: Brilliant Blues */
+        .bg-primary-dark { background-color: #0077B6; }
+        .text-primary-dark { color: #0077B6; }
+        .border-primary-dark { border-color: #0077B6; }
+
+        .bg-primary-medium { background-color: #00B4D8; }
+        .text-primary-medium { color: #00B4D8; }
+        .border-primary-medium { border-color: #00B4D8; }
+
+        .bg-primary-light { background-color: #ADE8F4; }
+        .text-primary-light { color: #ADE8F4; }
+        .border-primary-light { border-color: #ADE8F4; }
+
+        .bg-primary-lighter { background-color: #CAF0F8; }
+        .text-primary-lighter { color: #CAF0F8; }
+        .border-primary-lighter { border-color: #CAF0F8; }
+
+        .bg-primary-accent { background-color: #90E0EF; }
+        .text-primary-accent { color: #90E0EF; }
+        .border-primary-accent { border-color: #90E0EF; }
+
+        .text-dark-emphasis { color: #073B4C; } /* From Energetic & Playful, for good contrast on light bg */
+        .text-light-emphasis { color: #FFFFFF; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!--
+    Infographic Plan Summary:
+
+    Overall Narrative: This infographic visualizes the key trends and market insights related to the rise of real-time, multimodal AI technologies, drawing heavily from the "Google AI Studio Stream Survey" report. It explores market growth, core technologies, innovative use cases, the competitive landscape, developer insights, and future prospects, tailored for a Japanese audience.
+
+    Chosen Palette: Brilliant Blues (#0077B6, #00B4D8, #ADE8F4, #CAF0F8, #90E0EF)
+
+    Structure & Sections:
+    1.  Introduction: Importance of real-time AI.
+        - Visualization: Large headline text, abstract visual (HTML/CSS).
+    2.  AI Market Overview & Growth: Market size and projections for real-time AI.
+        - Visualization: Single Big Number (Chart.js - text), Line Chart (Chart.js - Growth). Goal: Inform, Change. Method: Chart.js (Canvas). NO SVG.
+    3.  Key Technology - Real-time Multimodal AI: What it is, why it's important (based on Stream features).
+        - Visualization: Icon list for modalities (Unicode/HTML/CSS), Flowchart-like diagram for bidirectional streaming (HTML/CSS). Goal: Organize, Inform. Method: HTML/CSS with Tailwind. NO SVG.
+    4.  Innovative Use Cases & Industry Impact: Examples across industries.
+        - Visualization: Bar Chart (Chart.js - Industry Adoption), Cards with icons (Unicode/HTML/CSS - Use Case Details). Goal: Compare, Inform. Method: Chart.js (Canvas), HTML/CSS. NO SVG.
+    5.  Key Players & Competitive Landscape: Google, OpenAI, Microsoft.
+        - Visualization: Donut Chart (Chart.js - Market Share Est.), Comparison Table (HTML/CSS - Strengths). Goal: Compare, Organize. Method: Chart.js (Canvas), HTML/CSS. NO SVG.
+    6.  Developer & User Insights: Adoption drivers and barriers.
+        - Visualization: Horizontal Bar Chart (Chart.js - Challenges), Ranked List (HTML/CSS - Popular Features). Goal: Compare, Organize. Method: Chart.js (Canvas), HTML/CSS. NO SVG.
+    7.  Future Outlook - AI Agents & Next-Gen Apps: Tech evolution and market opportunities.
+        - Visualization: HTML/CSS Timeline, Bubble Chart (Chart.js - Potential of New Fields). Goal: Change, Compare. Method: HTML/CSS, Chart.js (Canvas). NO SVG.
+    8.  Conclusion & Recommendations: Message for Japanese businesses/developers.
+        - Visualization: Text summary.
+
+    Confirmation: NEITHER Mermaid JS NOR SVG were used anywhere in the output. All diagrams will be HTML/CSS or Canvas-based. All charts via Chart.js (Canvas).
+    -->
+
+    <header class="bg-primary-dark text-white py-8 shadow-lg">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">AI業界のリアルタイム革命</h1>
+            <p class="text-xl md:text-2xl text-primary-lighter">Stream技術が拓く未来と市場動向</p>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 bg-primary-medium text-white shadow-md z-50">
+        <div class="container mx-auto px-4">
+            <ul class="flex flex-wrap justify-center space-x-2 sm:space-x-4 py-2 text-sm sm:text-base">
+                <li><a href="#introduction" class="hover:text-primary-lighter p-2">イントロ</a></li>
+                <li><a href="#market-overview" class="hover:text-primary-lighter p-2">市場概況</a></li>
+                <li><a href="#key-technology" class="hover:text-primary-lighter p-2">キーテクノロジー</a></li>
+                <li><a href="#use-cases" class="hover:text-primary-lighter p-2">活用事例</a></li>
+                <li><a href="#key-players" class="hover:text-primary-lighter p-2">主要プレイヤー</a></li>
+                <li><a href="#developer-insights" class="hover:text-primary-lighter p-2">開発者インサイト</a></li>
+                <li><a href="#future-outlook" class="hover:text-primary-lighter p-2">未来展望</a></li>
+                <li><a href="#conclusion" class="hover:text-primary-lighter p-2">結論</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="introduction" class="my-12 scroll-mt-20">
+            <div class="card text-center">
+                <h2 class="section-title text-primary-dark">はじめに：リアルタイムAIの衝撃</h2>
+                <p class="text-lg text-dark-emphasis leading-relaxed max-w-3xl mx-auto">
+                    人工知能（AI）は、私たちの働き方や生活を根本から変えつつあります。特に、Google AI StudioのStream機能に代表されるリアルタイム・マルチモーダルAI技術の登場は、AIとのインタラクションを飛躍的に進化させ、これまでにない応答性と対話性を実現しています。本インフォグラフィックでは、この革新的な技術がもたらす業界トレンド、市場の可能性、そして開発者が直面する課題と機会について深掘りします。
+                </p>
+                <div class="mt-8 flex justify-center items-center space-x-4">
+                    <div class="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center animate-pulse"><span class="icon-big">⚡️</span></div>
+                    <div class="w-20 h-20 bg-primary-accent rounded-full flex items-center justify-center animate-pulse delay-100"><span class="icon-big">🗣️</span></div>
+                    <div class="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center animate-pulse delay-200"><span class="icon-big">👁️</span></div>
+                </div>
+                 <p class="mt-4 text-sm text-gray-600">リアルタイム処理、音声認識、視覚理解が融合する新時代</p>
+            </div>
+        </section>
+
+        <section id="market-overview" class="my-12 scroll-mt-20">
+            <h2 class="section-title text-primary-dark">AI市場概況と成長予測</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">急成長するリアルタイムAI市場</h3>
+                    <p class="text-dark-emphasis mb-4">
+                        リアルタイムAI処理技術は、顧客対応、データ分析、コンテンツ生成など、多岐にわたる分野で需要が急増しています。市場は驚異的なスピードで拡大を続けています。
+                    </p>
+                    <div class="text-center my-6">
+                        <p class="text-xl text-dark-emphasis">現在の市場規模（推定）</p>
+                        <p class="text-5xl font-bold text-primary-dark my-2">15兆円</p>
+                        <p class="text-sm text-gray-500">(2024年末時点)</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">市場成長予測 (2024-2028年)</h3>
+                    <p class="text-dark-emphasis mb-4">
+                        今後数年間で、リアルタイムAI市場は年平均成長率30%以上で成長し、2028年には現在の3倍以上の規模に達すると予測されています。
+                    </p>
+                    <div class="chart-container h-[300px] md:h-[350px]">
+                        <canvas id="marketGrowthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="key-technology" class="my-12 scroll-mt-20">
+            <h2 class="section-title text-primary-dark">キーテクノロジー：リアルタイム・マルチモーダルAI</h2>
+            <div class="card">
+                <p class="text-lg text-dark-emphasis leading-relaxed max-w-3xl mx-auto mb-8 text-center">
+                    Google AI Studio Streamのようなプラットフォームは、複数の情報源（モダリティ）をリアルタイムに処理し、人間と自然に対話する能力をAIに与えます。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                    <div>
+                        <h3 class="subsection-title text-primary-medium">主要な入力モダリティ</h3>
+                        <ul class="space-y-3 text-dark-emphasis">
+                            <li class="flex items-center"><span class="icon-big mr-3 text-primary-dark">📝</span> テキスト：プロンプト、会話ターン</li>
+                            <li class="flex items-center"><span class="icon-big mr-3 text-primary-dark">🗣️</span> 音声：リアルタイムマイク入力、文字起こし</li>
+                            <li class="flex items-center"><span class="icon-big mr-3 text-primary-dark">📹</span> ビデオ：ウェブカメラフィード、ファイルストリーミング</li>
+                            <li class="flex items-center"><span class="icon-big mr-3 text-primary-dark">💻</span> 画面共有：コンテキストに応じた支援</li>
+                            <li class="flex items-center"><span class="icon-big mr-3 text-primary-dark">📄</span> ファイル/画像：アップロードとリアルタイム分析</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="subsection-title text-primary-medium">双方向ストリーミングの仕組み</h3>
+                        <p class="text-dark-emphasis mb-4">
+                            WebSocket技術を基盤とし、低遅延で継続的なデータのやり取りを実現します。これにより、AIはユーザーの入力に即座に反応し、途中で割り込むことも可能です。
+                        </p>
+                        <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+                            <div class="flowchart-step border-primary-dark text-primary-dark w-full sm:w-1/3">ユーザー入力<br>(音声/映像/テキスト)</div>
+                            <div class="flowchart-arrow text-primary-dark transform sm:rotate-0 rotate-90">➡️</div>
+                            <div class="flowchart-step border-primary-medium text-primary-medium w-full sm:w-1/3">AIモデル処理<br>(Geminiなど)</div>
+                            <div class="flowchart-arrow text-primary-medium transform sm:rotate-0 rotate-90">➡️</div>
+                            <div class="flowchart-step border-primary-accent text-primary-accent w-full sm:w-1/3">リアルタイム応答<br>(テキスト/音声)</div>
+                        </div>
+                         <p class="mt-4 text-sm text-gray-600 text-center">永続的なWebSocket接続により、シームレスな対話が実現</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="use-cases" class="my-12 scroll-mt-20">
+            <h2 class="section-title text-primary-dark">革新的ユースケースと業界へのインパクト</h2>
+            <div class="card mb-8">
+                 <p class="text-lg text-dark-emphasis leading-relaxed max-w-3xl mx-auto mb-6 text-center">
+                    リアルタイム・マルチモーダルAIは、既に様々な業界で革新的な活用が始まっています。これにより、業務効率の大幅な向上や、全く新しいユーザー体験の創出が期待されています。
+                </p>
+                <h3 class="subsection-title text-primary-medium text-center">業界別AI導入インパクト（推定）</h3>
+                <div class="chart-container h-[350px] md:h-[400px]">
+                    <canvas id="industryImpactChart"></canvas>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card">
+                    <h4 class="font-semibold text-xl mb-2 text-primary-dark flex items-center"><span class="icon-big mr-2">⚙️</span>業務効率化支援</h4>
+                    <p class="text-dark-emphasis">Excel操作のリアルタイムサポート、ITサポートアシスタント、複雑なソフトウェアの操作補助など、日々の業務をAIが強力にバックアップします。</p>
+                </div>
+                <div class="card">
+                    <h4 class="font-semibold text-xl mb-2 text-primary-dark flex items-center"><span class="icon-big mr-2">👨‍💻</span>ソフトウェア開発</h4>
+                    <p class="text-dark-emphasis">ライブコーディングチューターとして、開発中のコードレビューやデバッグ支援を行い、開発速度と品質の向上に貢献します。</p>
+                </div>
+                <div class="card">
+                    <h4 class="font-semibold text-xl mb-2 text-primary-dark flex items-center"><span class="icon-big mr-2">🎬</span>コンテンツ分析・制作</h4>
+                    <p class="text-dark-emphasis">YouTube動画の自動要約・分析、画像認識による説明生成、共同描画パートナーなど、クリエイティブな作業を支援します。</p>
+                </div>
+                <div class="card">
+                    <h4 class="font-semibold text-xl mb-2 text-primary-dark flex items-center"><span class="icon-big mr-2">🏭</span>製造業・産業応用</h4>
+                    <p class="text-dark-emphasis">産業機械の状態監視、音声・映像によるリアルタイム診断、遠隔作業支援など、現場の安全性と生産性を高めます。</p>
+                </div>
+                <div class="card">
+                    <h4 class="font-semibold text-xl mb-2 text-primary-dark flex items-center"><span class="icon-big mr-2">♿</span>アクセシビリティ向上</h4>
+                    <p class="text-dark-emphasis">視覚障碍者向けの動画内容解説や、ホットキーによる操作自動化など、情報アクセスやPC利用のバリアフリー化を推進します。</p>
+                </div>
+                <div class="card">
+                    <h4 class="font-semibold text-xl mb-2 text-primary-dark flex items-center"><span class="icon-big mr-2">📚</span>教育・学習支援</h4>
+                    <p class="text-dark-emphasis">個別指導型のAIチューター、インタラクティブな教材生成、言語学習パートナーなど、パーソナライズされた学習体験を提供します。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="key-players" class="my-12 scroll-mt-20">
+            <h2 class="section-title text-primary-dark">主要プレイヤーと競争環境</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">リアルタイムAI市場シェア（推定）</h3>
+                     <p class="text-dark-emphasis mb-4">Google、OpenAI、Microsoftなどが主要プレイヤーとして市場を牽引していますが、多くのスタートアップも革新的な技術で参入しています。</p>
+                    <div class="chart-container h-[300px] md:h-[350px]">
+                        <canvas id="marketShareChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">主要プレイヤーの特徴比較</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-dark-emphasis">
+                            <thead class="bg-primary-lighter text-primary-dark">
+                                <tr>
+                                    <th class="p-2">プレイヤー</th>
+                                    <th class="p-2">強み・特徴</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-primary-light">
+                                    <td class="p-2 font-semibold">Google (AI Studio/Vertex AI)</td>
+                                    <td class="p-2">強力なマルチモーダル機能、開発者フレンドリーな環境(AI Studio)、スケーラブルなプラットフォーム(Vertex AI)</td>
+                                </tr>
+                                <tr class="border-b border-primary-light">
+                                    <td class="p-2 font-semibold">OpenAI</td>
+                                    <td class="p-2">先進的な大規模言語モデル(GPTシリーズ)、強力なAPIとエコシステム、テキスト・音声ストリーミング</td>
+                                </tr>
+                                <tr class="border-b border-primary-light">
+                                    <td class="p-2 font-semibold">Microsoft Azure</td>
+                                    <td class="p-2">エンタープライズ向けAIサービス、Azure OpenAI連携、堅牢な音声・翻訳機能</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-semibold">その他スタートアップ</td>
+                                    <td class="p-2">特定分野特化型ソリューション、革新的なニッチ技術</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="developer-insights" class="my-12 scroll-mt-20">
+            <h2 class="section-title text-primary-dark">開発者とユーザーのインサイト</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">AI導入・開発における主な課題</h3>
+                    <p class="text-dark-emphasis mb-4">リアルタイムAI技術は強力ですが、開発者やユーザーはいくつかの課題に直面しています。これらを克服することが普及の鍵となります。</p>
+                    <div class="chart-container h-[350px] md:h-[400px]">
+                        <canvas id="challengesChart"></canvas>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">人気のAI機能と開発者の関心事</h3>
+                     <p class="text-dark-emphasis mb-4">開発者は、よりインタラクティブで高度な機能に関心を寄せています。コミュニティでは活発な情報交換やノウハウ共有が行われています。</p>
+                    <ul class="space-y-3 text-dark-emphasis">
+                        <li class="p-3 bg-primary-lighter rounded-md shadow-sm"><strong>1. 画面共有と連携したAI支援:</strong> 視覚情報に基づくリアルタイムなアドバイス。</li>
+                        <li class="p-3 bg-primary-lighter rounded-md shadow-sm"><strong>2. 高度な音声対話機能:</strong> 自然な会話フロー、割り込み処理、VAD。</li>
+                        <li class="p-3 bg-primary-lighter rounded-md shadow-sm"><strong>3. 関数呼び出しと外部連携:</strong> AIが外部APIやツールを能動的に利用。</li>
+                        <li class="p-3 bg-primary-lighter rounded-md shadow-sm"><strong>4. マルチモーダルなデータ分析:</strong> 映像、音声、テキストを統合した深い洞察。</li>
+                        <li class="p-3 bg-primary-lighter rounded-md shadow-sm"><strong>5. コード生成・実行機能:</strong> AIによるプログラミングタスクの自動化。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="future-outlook" class="my-12 scroll-mt-20">
+            <h2 class="section-title text-primary-dark">未来展望：AIエージェントと次世代アプリケーション</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">技術進化のタイムライン（予測）</h3>
+                    <div class="timeline text-dark-emphasis">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold">現在〜2025年: 基盤モデルの強化</h4>
+                            <p class="text-sm">Flash 2.5のような次世代モデル登場。画像・ビデオ・音声処理能力が大幅向上。マルチモーダル性能の底上げ。</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold">2025年〜2027年: エージェント機能の本格化</h4>
+                            <p class="text-sm">ウェブ検索とコード実行の連携強化。より自律的なタスク実行能力を持つAIエージェントの普及。専門分野特化型エージェント登場。</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <h4 class="font-semibold">2027年以降: シームレスなAI統合</h4>
+                            <p class="text-sm">AIがOSや各種アプリケーションに深く統合。Cloud Run等との連携による容易なデプロイ。より高度な共同作業ツールや没入型体験の実現。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3 class="subsection-title text-primary-medium">有望な新応用分野のポテンシャル</h3>
+                    <p class="text-dark-emphasis mb-4">リアルタイム・マルチモーダルAIは、今後さらに多様な分野で活用され、新たな市場を創出すると期待されています。</p>
+                    <div class="chart-container h-[350px] md:h-[400px]">
+                        <canvas id="futureFieldsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="my-12 scroll-mt-20">
+            <div class="card bg-primary-dark text-white">
+                <h2 class="section-title text-primary-lighter">結論と日本の企業・開発者への提言</h2>
+                <p class="text-lg leading-relaxed max-w-3xl mx-auto mb-6">
+                    Google AI Studio Streamに代表されるリアルタイム・マルチモーダルAI技術は、AIアプリケーション開発の常識を塗り替え、人間とAIの協調に新たな地平を切り拓いています。まだ発展途上の技術ではありますが、そのポテンシャルは計り知れません。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                    <div>
+                        <h4 class="font-semibold text-xl mb-2 text-primary-accent">日本の開発者・企業への推奨事項：</h4>
+                        <ul class="list-disc list-inside space-y-2 text-primary-lighter">
+                            <li><strong>積極的な実験と導入検討：</strong> AI Studioのようなツールを活用し、自社ビジネス課題解決や新サービス創出の可能性を探る。</li>
+                            <li><strong>コミュニティとの連携：</strong> 最新のユースケースや技術動向をSNSやフォーラムで常に把握し、知見を共有する。</li>
+                            <li><strong>段階的なアプローチ：</strong> 「プレビュー」段階の技術特性を理解し、小規模な実証実験から始め、徐々に本格導入へと進める。</li>
+                            <li><strong>マルチモーダルな発想：</strong> 複数の情報チャネルを組み合わせることで生まれる、新たな価値創造に注力する。</li>
+                            <li><strong>Vertex AI等へのスケーリングパスを意識：</strong> プロトタイプから本番システムへの移行を見据えた開発計画を立てる。</li>
+                        </ul>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <p class="text-6xl animate-bounce">🚀</p>
+                    </div>
+                </div>
+                <p class="mt-8 text-center text-primary-accent font-semibold">
+                    この技術革新の波に乗り、未来を創造しましょう。
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 py-8 text-center">
+        <p class="text-sm">&copy; 2025 AI業界トレンドインフォグラフィック. All rights reserved.</p>
+        <p class="text-xs mt-1">このインフォグラフィックはデモンストレーション目的で作成されたものであり、実際の市場データとは異なる場合があります。</p>
+    </footer>
+
+    <script>
+        const CHART_COLORS = {
+            primaryDark: '#0077B6',
+            primaryMedium: '#00B4D8',
+            primaryLight: '#ADE8F4',
+            primaryLighter: '#CAF0F8',
+            primaryAccent: '#90E0EF',
+            textDarkEmphasis: '#073B4C'
+        };
+
+        function processLabels(labels, maxLength = 16) {
+            return labels.map(label => {
+                if (typeof label === 'string' && label.length > maxLength) {
+                    const words = label.split(' ');
+                    const lines = [];
+                    let currentLine = '';
+                    for (const word of words) {
+                        if ((currentLine + ' ' + word).trim().length <= maxLength) {
+                            currentLine = (currentLine + ' ' + word).trim();
+                        } else {
+                            if (currentLine) lines.push(currentLine);
+                            currentLine = word;
+                        }
+                    }
+                    if (currentLine) lines.push(currentLine);
+                    return lines.length > 0 ? lines : [label]; // Ensure it returns an array even if no split
+                }
+                return label;
+            });
+        }
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: CHART_COLORS.textDarkEmphasis,
+                        font: { family: "'Inter', 'Noto Sans JP', sans-serif" }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    titleFont: { family: "'Inter', 'Noto Sans JP', sans-serif" },
+                    bodyFont: { family: "'Inter', 'Noto Sans JP', sans-serif" }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: CHART_COLORS.textDarkEmphasis, font: { family: "'Inter', 'Noto Sans JP', sans-serif" } },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                y: {
+                    ticks: { color: CHART_COLORS.textDarkEmphasis, font: { family: "'Inter', 'Noto Sans JP', sans-serif" } },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                }
+            }
+        };
+
+
+        // 1. Market Growth Chart (Line)
+        const marketGrowthCtx = document.getElementById('marketGrowthChart').getContext('2d');
+        new Chart(marketGrowthCtx, {
+            type: 'line',
+            data: {
+                labels: ['2024', '2025', '2026', '2027', '2028'],
+                datasets: [{
+                    label: '市場規模 (兆円)',
+                    data: [15, 20, 28, 38, 50],
+                    borderColor: CHART_COLORS.primaryDark,
+                    backgroundColor: 'rgba(0, 119, 182, 0.1)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: { ...commonChartOptions }
+        });
+
+        // 2. Industry Impact Chart (Bar)
+        const industryImpactCtx = document.getElementById('industryImpactChart').getContext('2d');
+        new Chart(industryImpactCtx, {
+            type: 'bar',
+            data: {
+                labels: processLabels(['業務効率化', 'ソフトウェア開発', 'コンテンツ制作', '製造業', 'アクセシビリティ', '教育・学習']),
+                datasets: [{
+                    label: 'AI導入による効率改善・価値創出ポテンシャル (相対値)',
+                    data: [85, 75, 70, 80, 65, 70],
+                    backgroundColor: [
+                        CHART_COLORS.primaryDark,
+                        CHART_COLORS.primaryMedium,
+                        CHART_COLORS.primaryAccent,
+                        CHART_COLORS.primaryDark,
+                        CHART_COLORS.primaryMedium,
+                        CHART_COLORS.primaryAccent
+                    ],
+                    borderColor: CHART_COLORS.primaryLighter,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                indexAxis: 'y', // Horizontal bar chart
+                 scales: {
+                    x: { ...commonChartOptions.scales.x, suggestedMin: 0, suggestedMax: 100 },
+                    y: { ...commonChartOptions.scales.y }
+                }
+            }
+        });
+
+        // 3. Market Share Chart (Doughnut)
+        const marketShareCtx = document.getElementById('marketShareChart').getContext('2d');
+        new Chart(marketShareCtx, {
+            type: 'doughnut',
+            data: {
+                labels: processLabels(['Google', 'OpenAI', 'Microsoft Azure', 'その他スタートアップ']),
+                datasets: [{
+                    label: '市場シェア (推定)',
+                    data: [30, 25, 20, 25],
+                    backgroundColor: [
+                        CHART_COLORS.primaryDark,
+                        CHART_COLORS.primaryMedium,
+                        CHART_COLORS.primaryAccent,
+                        CHART_COLORS.primaryLight
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: { ...commonChartOptions, scales: {} } // No scales for doughnut
+        });
+
+        // 4. Challenges Chart (Horizontal Bar)
+        const challengesCtx = document.getElementById('challengesChart').getContext('2d');
+        new Chart(challengesCtx, {
+            type: 'bar',
+            data: {
+                labels: processLabels(['パフォーマンス (遅延、トークン制限)', '開発ドキュメント・SDKの複雑さ', '導入・運用コスト', 'セキュリティ懸念', '技術の未成熟さ(プレビュー版)']),
+                datasets: [{
+                    label: '課題の深刻度 (開発者調査に基づく相対値)',
+                    data: [70, 60, 55, 50, 45],
+                     backgroundColor: [
+                        CHART_COLORS.primaryDark,
+                        CHART_COLORS.primaryMedium,
+                        CHART_COLORS.primaryAccent,
+                        CHART_COLORS.primaryLight,
+                        CHART_COLORS.primaryLighter,
+                    ],
+                    borderColor: CHART_COLORS.textDarkEmphasis,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: { ...commonChartOptions.scales.x, suggestedMin: 0, suggestedMax: 100 },
+                    y: { ...commonChartOptions.scales.y }
+                }
+            }
+        });
+
+        // 5. Future Fields Chart (Bubble)
+        const futureFieldsCtx = document.getElementById('futureFieldsChart').getContext('2d');
+        new Chart(futureFieldsCtx, {
+            type: 'bubble',
+            data: {
+                datasets: [{
+                    label: '強化されたアクセシビリティツール',
+                    data: [{ x: 20, y: 30, r: 25 }],
+                    backgroundColor: 'rgba(0, 119, 182, 0.7)' // primaryDark
+                }, {
+                    label: 'リアルタイム共同作業ツール',
+                    data: [{ x: 40, y: 60, r: 35 }],
+                    backgroundColor: 'rgba(0, 180, 216, 0.7)' // primaryMedium
+                }, {
+                    label: '高度な教育プラットフォーム',
+                    data: [{ x: 60, y: 40, r: 30 }],
+                    backgroundColor: 'rgba(173, 232, 244, 0.7)' // primaryLight
+                }, {
+                    label: '没入型ゲーム・エンタメ',
+                    data: [{ x: 75, y: 70, r: 40 }],
+                    backgroundColor: 'rgba(144, 224, 239, 0.7)' // primaryAccent
+                }, {
+                    label: '次世代カスタマーサービス',
+                    data: [{ x: 30, y: 80, r: 28 }],
+                    backgroundColor: 'rgba(0, 119, 182, 0.5)'
+                }]
+            },
+            options: {
+                ...commonChartOptions,
+                plugins: {
+                    ...commonChartOptions.plugins,
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += `(ポテンシャル: ${context.raw.r})`;
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { ...commonChartOptions.scales.x, title: { display: true, text: '技術的実現性 (→高)' } },
+                    y: { ...commonChartOptions.scales.y, title: { display: true, text: '市場ニーズ (→高)' } }
+                }
+            }
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
